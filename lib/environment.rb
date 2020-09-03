@@ -3,6 +3,7 @@
 # Require dependencies
 require 'pry'
 
+require_relative 'logs_parser/logs_parser_service'
 require_relative 'logs_parser/reader'
 require_relative 'logs_parser/line_splitter'
 require_relative 'logs_parser/storer'

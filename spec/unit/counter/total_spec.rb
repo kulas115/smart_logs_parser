@@ -37,7 +37,7 @@ RSpec.describe LogsParser::Counter::Total do
   end
 
   describe '#call' do
-    subject(:count) { described_class.new.call(visits) }
+    subject(:count) { described_class.call(visits) }
 
     it 'accepts hash of visits and returns new hash with total count of visits' do
       expect(count).to eq(results)

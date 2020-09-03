@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe LogsParser::Reader do
-  subject(:reader) { described_class.new(file_path) }
+  subject(:reader) { described_class.call(file_path) }
 
   let(:logs) do
     <<~LOGS
@@ -30,7 +30,7 @@ RSpec.describe LogsParser::Reader do
     let(:error_msg) { "Provided file under #{file_path} does not exist" }
 
     it 'raises an error' do
-      expect { reader.call }.to raise_error(error_msg)
+      expect { reader }.to raise_error(error_msg)
     end
   end
 
@@ -46,7 +46,7 @@ RSpec.describe LogsParser::Reader do
     after { log_file.close }
 
     it 'reads file by lines and removes leading/trailing whitespace' do
-      expect(reader.call).to eq(result)
+      expect(reader).to eq(result)
     end
   end
 end

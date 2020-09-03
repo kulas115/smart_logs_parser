@@ -2,7 +2,7 @@
 
 module LogsParser
   module Counter
-    class Base
+    class Base  < LogsParserService
       def call(visits)
         visits.each_with_object({}) do |(page_url, ips_array), views|
           views[page_url] = count(ips_array)

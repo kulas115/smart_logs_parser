@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe LogsParser::Sorter do
-  subject(:sort) { described_class.new }
+  subject(:sort) { described_class.call(visits) }
 
   let(:visits) do
     {
@@ -16,8 +16,8 @@ RSpec.describe LogsParser::Sorter do
     }
   end
 
-  it 'sort visits descending' do
-    result = [
+  let(:results) do
+    [
       ['/help_page/1', 6],
       ['/about/2', 4],
       ['/contact', 4],
@@ -25,7 +25,9 @@ RSpec.describe LogsParser::Sorter do
       ['/index', 4],
       ['/about', 3]
     ]
+  end
 
-    expect(sort.call(visits)).to eq(result)
+  it 'sort visits descending' do
+    expect(sort).to eq(results)
   end
 end

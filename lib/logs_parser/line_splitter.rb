@@ -2,7 +2,7 @@
 
 module LogsParser
   # :nodoc:
-  class LineSplitter
+  class LineSplitter  < LogsParserService
     URL_REGEXP = %r{/[/_0-9a-z]*}.freeze
     IP_REGEXP  = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.freeze
 

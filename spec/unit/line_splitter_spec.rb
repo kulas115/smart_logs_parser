@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe LogsParser::LineSplitter do
-  subject(:splitter) { described_class.new.call(line) }
+  subject(:splitter) { described_class.call(line) }
 
   context 'when URL and IP are space delimitted' do
     let(:line) { '/contact 184.123.665.067' }

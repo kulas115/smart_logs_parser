@@ -15,7 +15,7 @@ RSpec.describe LogsParser::Printer::Base do
   end
 
   describe '#call' do
-    subject(:print) { described_class.new.call(visits) }
+    subject(:print) { described_class.call(visits) }
 
     it 'raises NotImplementedError' do
       expect { print }.to raise_error(NotImplementedError)

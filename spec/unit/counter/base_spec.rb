@@ -28,7 +28,7 @@ RSpec.describe LogsParser::Counter::Base do
   end
 
   describe '#call' do
-    subject(:count) { described_class.new.call(visits) }
+    subject(:count) { described_class.call(visits) }
 
     it 'raises NotImplementedError' do
       expect { count }.to raise_error(NotImplementedError)

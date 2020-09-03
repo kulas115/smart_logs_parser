@@ -2,7 +2,7 @@
 
 module LogsParser
   # :nodoc:
-  class Storer
+  class Storer < LogsParserService
     def initialize(line_splitter: nil)
       @storage = Hash.new { [] }
       @line_splitter = line_splitter || LineSplitter.new

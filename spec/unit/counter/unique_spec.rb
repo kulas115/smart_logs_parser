@@ -37,7 +37,7 @@ RSpec.describe LogsParser::Counter::Unique do
   end
 
   describe '#call' do
-    subject(:count) { described_class.new.call(visits) }
+    subject(:count) { described_class.call(visits) }
     it 'accepts hash of visits and returns new hash with uniq count of visits' do
       expect(count).to eq(results)
     end
