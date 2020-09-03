@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ParameterLists
 module LogsParser
   class Worker
     def initialize(input_path:, reader: nil, storer: nil, line_splitter: nil,
@@ -47,3 +48,4 @@ module LogsParser
     end
   end
 end
+# rubocop:enable all
