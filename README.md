@@ -1,4 +1,4 @@
-# LogsParser [![CircleCI](https://circleci.com/gh/kulas115/smart_logs_parser.svg?style=svg)](https://circleci.com/gh/kulas115/smart_logs_parser)
+# LogsParser [![CircleCI](https://circleci.com/gh/kulas115/smart_logs_parser.svg?style=svg)](https://circleci.com/gh/kulas115/smart_logs_parser) [![Maintainability](https://api.codeclimate.com/v1/badges/ec62b03b89623f0468a3/maintainability)](https://codeclimate.com/github/kulas115/smart_logs_parser/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/ec62b03b89623f0468a3/test_coverage)](https://codeclimate.com/github/kulas115/smart_logs_parser/test_coverage)
 
 Simple ruby script to parse log file in format `<url_address> <ip_address>` and return count of total or unique visits.
 
