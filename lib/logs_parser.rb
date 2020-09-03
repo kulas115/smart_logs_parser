@@ -4,19 +4,10 @@ require 'pry'
 require_relative 'logs_parser/reader'
 require_relative 'logs_parser/line_splitter'
 require_relative 'logs_parser/storer'
+require_relative 'logs_parser/counter'
 
 module LogsParser
-  class Counter
-    def call(hash, ordering = nil)
-      hash.each_with_object({}) do |(page_url, ips_array), views|
-        views[page_url] = if ordering == :uniq
-                            ips_array.uniq.size
-                          else
-                            ips_array.size
-                          end
-      end
-    end
-  end
+
 
   class Sorter
     def call(visits, direction = nil)
