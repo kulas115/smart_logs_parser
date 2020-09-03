@@ -43,7 +43,10 @@ RSpec.describe LogsParser::Reader do
       log_file.rewind
     end
 
-    after { log_file.close }
+    after do
+      log_file.close
+      log_file.unlink
+    end
 
     it 'reads file by lines and removes leading/trailing whitespace' do
       expect(reader).to eq(result)

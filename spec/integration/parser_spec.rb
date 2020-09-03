@@ -29,7 +29,10 @@ RSpec.describe Parser do
     log_file.rewind
   end
 
-  after { log_file.close }
+  after do
+    log_file.close
+    log_file.unlink
+  end
 
   describe '#call' do
     subject(:parse) { described_class.new(file_path: sample_log_path, schema: schema).call }
