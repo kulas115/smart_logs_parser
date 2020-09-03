@@ -6,5 +6,5 @@ require_relative '../lib/parser.rb'
 if ARGV.empty?
   puts 'Please include path to the logs file'
 else
-  Parser.new.call(ARGV[0])
+  Parser.new(file_path: ARGV[0]).call
 end
