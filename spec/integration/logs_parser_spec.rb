@@ -16,6 +16,6 @@ RSpec.describe LogsParser do
       /about 3 visits
     TEXT
 
-    expect { worker.call(sample_log_path) }.to output(result).to_stdout
+    expect { worker.call }.to output(result).to_stdout
   end
 end

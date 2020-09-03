@@ -10,7 +10,7 @@ require_relative 'logs_parser/printer'
 
 module LogsParser
   class Worker
-    def initialize(input_path:, reader: nil, storer: nil, line_splitter: nil, counter: nil, sorter: nil, printer: nil )
+    def initialize(input_path:, reader: nil, storer: nil, line_splitter: nil, counter: nil, sorter: nil, printer: nil)
       @input_path = input_path
       @reader = reader || Reader
       @storer = storer || Storer
@@ -20,12 +20,16 @@ module LogsParser
       @printer = printer || Printer.new
     end
 
-    def call(input_path)
-      LogsParser::Reader.new(input_path).call
-                        .then { |lines| Storer.new(line_splitter: LogsParser::LineSplitter.new).call(lines) }
-                        .then { |visits| Counter.new.call(visits) }
-                        .then { |counted_visits| Sorter.new.call(counted_visits) }
-                        .then { |sorted_visits| Printer.new.call(sorted_visits) }
+    def call
+      reader.new(input_path).call
+            .then { |lines| storer.new(line_splitter: line_splitter).call(lines) }
+            .then { |visits| counter.call(visits) }
+            .then { |counted_visits| sorter.call(counted_visits) }
+            .then { |sorted_visits| printer.call(sorted_visits) }
     end
+
+    private
+
+    attr_reader :input_path, :reader, :storer, :line_splitter, :counter, :sorter, :printer
   end
 end
