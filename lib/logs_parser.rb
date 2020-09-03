@@ -5,20 +5,9 @@ require_relative 'logs_parser/reader'
 require_relative 'logs_parser/line_splitter'
 require_relative 'logs_parser/storer'
 require_relative 'logs_parser/counter'
+require_relative 'logs_parser/sorter'
 
 module LogsParser
-
-
-  class Sorter
-    def call(visits, direction = nil)
-      if direction == :desc
-        visits.sort_by { |_k, v| -v }
-      else
-        visits.sort_by { |_k, v| v }
-      end
-    end
-  end
-
   class Printer
     def print_total(array)
       array.each do |small_array|
