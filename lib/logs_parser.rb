@@ -6,22 +6,9 @@ require_relative 'logs_parser/line_splitter'
 require_relative 'logs_parser/storer'
 require_relative 'logs_parser/counter'
 require_relative 'logs_parser/sorter'
+require_relative 'logs_parser/printer'
 
 module LogsParser
-  class Printer
-    def print_total(array)
-      array.each do |small_array|
-        puts "#{small_array[0]} #{small_array[1]} visits"
-      end
-    end
-
-    def print_unique(array)
-      array.each do |small_array|
-        puts "#{small_array[0]} #{small_array[1]} unique views"
-      end
-    end
-  end
-
   class Worker
     def call(input_path)
       LogsParser::Reader.new(input_path).call
