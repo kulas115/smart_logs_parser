@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'parser'
-
 module LogsParser
   class Worker
     def initialize(input_path:, reader: nil, storer: nil, line_splitter: nil,
@@ -9,17 +7,16 @@ module LogsParser
       @input_path = input_path
       @reader = reader || Reader
       @storer = storer || Storer
-      @line_splitter = line_splitter || LineSplitter.new
-      @counter = counter || Counter::Total.new
-      @sorter = sorter || Sorter.new
-      @printer = printer || Printer::Total.new
+      @line_splitter = line_splitter || LineSplitter
+      @counter = counter || Counter::Total
+      @sorter = sorter || Sorter
+      @printer = printer || Printer::Total
     end
 
     def call
       read_file
         .then(&method(:store_file_content))
         .then(&method(:count_visits))
-        .then(&method(:sort_visits))
         .then(&method(:sort_visits))
         .then(&method(:print_visits))
     end
@@ -30,11 +27,11 @@ module LogsParser
                 :sorter, :printer
 
     def read_file
-      reader.new(input_path).call
+      reader.call(input_path)
     end
 
     def store_file_content(lines)
-      storer.new(line_splitter: line_splitter).call(lines)
+      storer.new(line_splitter: line_splitter.new).call(lines)
     end
 
     def count_visits(visits)

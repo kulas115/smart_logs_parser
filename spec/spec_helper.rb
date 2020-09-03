@@ -2,7 +2,6 @@
 
 require 'bundler/setup'
 require 'parser'
-require 'logs_parser'
 require 'pry'
 require 'securerandom'
 
