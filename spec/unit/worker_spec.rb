@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers, RSpec/MultipleExpectations, RSpec/ExampleLength
 RSpec.describe LogsParser::Worker do
   let(:worker) do
     described_class.new(
@@ -16,7 +17,7 @@ RSpec.describe LogsParser::Worker do
   let(:input_path)    { 'fake_path' }
   let(:reader)        { LogsParser::Reader }
   let(:storer)        { LogsParser::Storer }
-  let(:storer_double) { instance_double('LogsParser::Storer', call: true) }
+  let(:storer_double) { instance_double('LogsParser::Storer', call: visits) }
   let(:line_splitter) { LogsParser::LineSplitter }
   let(:counter)       { LogsParser::Counter::Total }
   let(:sorter)        { LogsParser::Sorter }
@@ -25,20 +26,25 @@ RSpec.describe LogsParser::Worker do
   let(:visits)        { instance_double(Hash) }
 
   before do
+    allow(reader).to receive(:call).and_return(lines)
+    allow(line_splitter).to receive(:new)
     allow(storer).to receive(:new).and_return(storer_double)
+    allow(counter).to receive(:call).and_return(visits)
+    allow(sorter).to receive(:call).and_return(visits)
+    allow(printer).to receive(:call)
   end
 
   shared_examples 'correctly calls all services' do
     it 'correctly calls all services in order' do
-      expect(reader).to receive(:call).with(input_path).once.and_return(lines).ordered
-      expect(line_splitter).to receive(:new)
-      expect(storer).to receive(:new)
-      expect(storer_double).to receive(:call).with(lines).once.and_return(visits).ordered
-      expect(counter).to receive(:call).with(visits).once.and_return(visits).ordered
-      expect(sorter).to receive(:call).with(visits).once.and_return(visits).ordered
-      expect(printer).to receive(:call).with(visits).once
-
       subject
+
+      expect(reader).to have_received(:call).with(input_path).once
+      expect(line_splitter).to have_received(:new)
+      expect(storer).to have_received(:new)
+      expect(storer_double).to have_received(:call).with(lines).once
+      expect(counter).to have_received(:call).with(visits).once
+      expect(sorter).to have_received(:call).with(visits).once
+      expect(printer).to have_received(:call).with(visits).once
     end
   end
 
@@ -57,3 +63,4 @@ RSpec.describe LogsParser::Worker do
     end
   end
 end
+# rubocop:enable all
