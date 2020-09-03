@@ -1,0 +1,162 @@
+version: 2.1
+
+executors:
+  ruby:
+    docker:
+      - image: circleci/ruby:2.7.1-buster-node-browsers
+        environment:
+            BUNDLE_JOBS: 4
+            BUNDLE_RETRY: 3
+            BUNDLE_PATH: vendor/bundle
+
+commands:
+  install_gems:
+    steps:
+      - restore_cache:
+          keys:
+            - parser-bundle-{{ checksum ".ruby-version" }}-{{ checksum "Gemfile.lock" }}
+
+  store_test_and_artifacts:
+    parameters:
+        path:
+          type: string
+    steps:
+      - store_test_results:
+          path: << parameters.path >>
+      - store_artifacts:
+          path: << parameters.path >>
+
+jobs:
+  checkout_code:
+    executor: ruby
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+
+  bundle_install:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - restore_cache:
+          keys:
+            - boni-bundle-{{ checksum ".ruby-version" }}-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
+      - save_cache:
+          key: boni-bundle-{{ checksum ".ruby-version" }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+  test_reporter_install:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Download cc-test-reporter
+          command: |
+            mkdir -p tmp/
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+            chmod +x ./tmp/cc-test-reporter
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - tmp/cc-test-reporter
+
+  run_audits:
+    executor: ruby
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - install_gems
+      - run:
+          name: Run bundle audit
+          command: bundle exec bundle-audit check --update
+      - run:
+          name: Rubocop
+          command: bundle exec rubocop
+
+  run_unit_tests:
+    executor: ruby
+    resource_class: small
+    parallelism: 2
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - install_gems
+      - run:
+          name: Run unit tests
+          command: |
+            TEST_COMMAND="$(circleci tests glob "spec/**/**/*_spec.rb" |
+                            circleci tests split --split-by=timings)"
+            bundle exec rspec --format progress \
+                              --format RspecJunitFormatter \
+                              --out test_results/rspec.xml \
+                              $TEST_COMMAND
+      - run:
+          name: Stash codeclimate results
+          command: |
+            mkdir coverage_results
+            ./tmp/cc-test-reporter format-coverage -t simplecov -o coverage_results/codeclimate.unit_$(echo $CIRCLE_NODE_INDEX).json coverage_results/coverage/.resultset.json
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - coverage_results
+      - store_test_and_artifacts:
+          path: "test_results"
+
+  upload_codeclimate_coverage:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Upload Coverage Results Summary to Code Climate
+          command: |
+            ./tmp/cc-test-reporter sum-coverage coverage_results/codeclimate.*.json -p 11 -o coverage_results/codeclimate.total.json
+            ./tmp/cc-test-reporter upload-coverage -i coverage_results/codeclimate.total.json --debug
+
+  scan_ruby_docker_image:
+    docker:
+      - image: aquasec/trivy:latest
+    steps:
+      - restore_cache:
+          key: vulnerability-db
+      - run:
+          name: Scan the ruby image used to build the project
+          command: trivy --exit-code 1 --severity HIGH,CRITICAL ruby:2.7.1-alpine3.12
+      - save_cache:
+          key: vulnerability-db
+          paths:
+            - $HOME/.cache/trivy
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout_code
+      - bundle_install:
+          requires:
+            - checkout_code
+      - test_reporter_install:
+          requires:
+            - checkout_code
+      - scan_ruby_docker_image:
+          requires:
+            - checkout_code
+      - run_audits:
+          requires:
+            - bundle_install
+      - run_unit_tests:
+          requires:
+            - bundle_install
+            - test_reporter_install
+      - upload_codeclimate_coverage:
+          requires:
+            - run_unit_tests
