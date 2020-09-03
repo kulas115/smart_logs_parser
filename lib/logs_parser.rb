@@ -10,7 +10,8 @@ require_relative 'logs_parser/printer'
 
 module LogsParser
   class Worker
-    def initialize(input_path:, reader: nil, storer: nil, line_splitter: nil, counter: nil, sorter: nil, printer: nil)
+    def initialize(input_path:, reader: nil, storer: nil, line_splitter: nil,
+                   counter: nil, sorter: nil, printer: nil)
       @input_path = input_path
       @reader = reader || Reader
       @storer = storer || Storer
@@ -21,15 +22,37 @@ module LogsParser
     end
 
     def call
-      reader.new(input_path).call
-            .then { |lines| storer.new(line_splitter: line_splitter).call(lines) }
-            .then { |visits| counter.call(visits) }
-            .then { |counted_visits| sorter.call(counted_visits) }
-            .then { |sorted_visits| printer.call(sorted_visits) }
+      read_file
+        .then(&method(:store_file_content))
+        .then(&method(:count_visits))
+        .then(&method(:sort_visits))
+        .then(&method(:sort_visits))
+        .then(&method(:print_visits))
     end
 
     private
 
-    attr_reader :input_path, :reader, :storer, :line_splitter, :counter, :sorter, :printer
+    attr_reader :input_path, :reader, :storer, :line_splitter, :counter,
+                :sorter, :printer
+
+    def read_file
+      reader.new(input_path).call
+    end
+
+    def store_file_content(lines)
+      storer.new(line_splitter: line_splitter).call(lines)
+    end
+
+    def count_visits(visits)
+      counter.call(visits)
+    end
+
+    def sort_visits(counted_visits)
+      sorter.call(counted_visits)
+    end
+
+    def print_visits(sorted_visits)
+      printer.call(sorted_visits)
+    end
   end
 end
