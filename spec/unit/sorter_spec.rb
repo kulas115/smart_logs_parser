@@ -25,7 +25,9 @@ RSpec.describe LogsParser::Sorter do
     ]
   end
 
-  it 'sort visits descending' do
-    expect(sort).to eq(results)
+  describe '#call' do
+    it 'sorts visits descending' do
+      expect(sort).to eq(results)
+    end
   end
 end

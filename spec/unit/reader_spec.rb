@@ -23,33 +23,35 @@ RSpec.describe LogsParser::Reader do
      '/index 444.701.448.104']
   end
 
-  context 'when provided file\'s path does not exist' do
-    let(:file_path) { 'fake_path' }
-    let(:error_msg) do
-      "No such file or directory - Provided file under #{file_path} does not exist"
+  describe '#call' do
+    context 'when provided file\'s path does not exist' do
+      let(:file_path) { 'fake_path' }
+      let(:error_msg) do
+        "No such file or directory - Provided file under #{file_path} does not exist"
+      end
+
+      it 'raises an error' do
+        expect { reader }.to raise_error(Errno::ENOENT, error_msg)
+      end
     end
 
-    it 'raises an error' do
-      expect { reader }.to raise_error(Errno::ENOENT, error_msg)
-    end
-  end
+    context 'when provided file\'s path exists' do
+      let(:log_file) { Tempfile.new(SecureRandom.alphanumeric) }
+      let(:file_path) { log_file.path }
 
-  context 'when provided file\'s path exists' do
-    let(:log_file) { Tempfile.new(SecureRandom.alphanumeric) }
-    let(:file_path) { log_file.path }
+      before do
+        log_file.write(logs)
+        log_file.rewind
+      end
 
-    before do
-      log_file.write(logs)
-      log_file.rewind
-    end
+      after do
+        log_file.close
+        log_file.unlink
+      end
 
-    after do
-      log_file.close
-      log_file.unlink
-    end
-
-    it 'reads file by lines and removes leading/trailing whitespace' do
-      expect(reader).to eq(result)
+      it 'reads file by lines and removes leading/trailing whitespace' do
+        expect(reader).to eq(result)
+      end
     end
   end
 end

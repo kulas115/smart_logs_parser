@@ -26,7 +26,7 @@ RSpec.describe LogsParser::Printer::Total do
   describe '#call' do
     subject(:print) { described_class.call(visits) }
 
-    it 'print total visits to the stdout' do
+    it 'prints total visits to the stdout' do
       expect { print }.to output(result).to_stdout
     end
   end
