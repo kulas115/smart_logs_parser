@@ -3,15 +3,15 @@
 module LogsParser
   class Reader < LogsParserService
     def call(file_path)
-      raise_error_if_file_does_not_exist(file_path)
+      raise_error(file_path) unless File.exist?(file_path)
 
       file_read(file_path)
     end
 
     private
 
-    def raise_error_if_file_does_not_exist(file_path)
-      raise "Provided file under #{file_path} does not exist" unless File.exist?(file_path)
+    def raise_error(file_path)
+      raise Errno::ENOENT, "Provided file under #{file_path} does not exist"
     end
 
     def file_read(file_path)

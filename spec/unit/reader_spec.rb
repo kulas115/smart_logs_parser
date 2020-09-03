@@ -27,10 +27,12 @@ RSpec.describe LogsParser::Reader do
 
   context 'when provided file\'s path does not exist' do
     let(:file_path) { 'fake_path' }
-    let(:error_msg) { "Provided file under #{file_path} does not exist" }
+    let(:error_msg) do
+      "No such file or directory - Provided file under #{file_path} does not exist"
+    end
 
     it 'raises an error' do
-      expect { reader }.to raise_error(error_msg)
+      expect { reader }.to raise_error(Errno::ENOENT, error_msg)
     end
   end
 
