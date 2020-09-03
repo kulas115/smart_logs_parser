@@ -10,9 +10,9 @@ module LogsParser
       @reader = reader || Reader
       @storer = storer || Storer
       @line_splitter = line_splitter || LineSplitter.new
-      @counter = counter || Counter.new
+      @counter = counter || Counter::Total.new
       @sorter = sorter || Sorter.new
-      @printer = printer || Printer.new
+      @printer = printer || Printer::Total.new
     end
 
     def call
