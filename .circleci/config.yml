@@ -119,7 +119,7 @@ jobs:
       - run:
           name: Upload Coverage Results Summary to Code Climate
           command: |
-            ./tmp/cc-test-reporter sum-coverage coverage_results/codeclimate.*.json -p 11 -o coverage_results/codeclimate.total.json
+            ./tmp/cc-test-reporter sum-coverage coverage_results/codeclimate.*.json -p 2 -o coverage_results/codeclimate.total.json
             ./tmp/cc-test-reporter upload-coverage -i coverage_results/codeclimate.total.json --debug
 
   scan_ruby_docker_image:
