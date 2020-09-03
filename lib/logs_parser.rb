@@ -3,26 +3,9 @@
 require 'pry'
 require_relative 'logs_parser/reader'
 require_relative 'logs_parser/line_splitter'
+require_relative 'logs_parser/storer'
 
 module LogsParser
-  class Storer
-    def initialize(line_splitter: nil)
-      @storage = Hash.new { [] }
-      @line_splitter = line_splitter || LineSplitter.new
-    end
-
-    def call(lines)
-      lines.each_with_object(storage) do |line, visits_storage|
-        page_url, page_ip = line_splitter.call(line)
-        visits_storage[page_url] <<= page_ip
-      end
-    end
-
-    private
-
-    attr_reader :storage, :line_splitter
-  end
-
   class Counter
     def call(hash, ordering = nil)
       hash.each_with_object({}) do |(page_url, ips_array), views|
