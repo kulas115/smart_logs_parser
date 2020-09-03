@@ -13,7 +13,7 @@ options = OptionParser.new do |opts|
   opts.separator ''
   opts.separator 'Options:'
 
-  opts.on('-o OPTION', '--option=OPTION', "Available options: 'total' (default) or 'unique'") do |option|
+  opts.on('-o OPTION', '--option=OPTION', "Options: 'total' (default) or 'unique'") do |option|
     arguments[:schema] = option.downcase.to_sym
   end
 
