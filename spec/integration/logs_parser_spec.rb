@@ -5,7 +5,7 @@ RSpec.describe LogsParser do
   it 'accepts the file_path and prints total vists per IP sorted desc' do
     sample_log_path = './sample_webserver.log'
 
-    worker = LogsParser::Worker.new
+    worker = LogsParser::Worker.new(input_path: sample_log_path)
 
     result = <<~TEXT
       /help_page/1 6 visits
