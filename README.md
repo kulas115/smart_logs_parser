@@ -1,4 +1,4 @@
-# LogsParser
+# LogsParser [![CircleCI](https://circleci.com/gh/kulas115/smart_logs_parser.svg?style=svg)](https://circleci.com/gh/kulas115/smart_logs_parser)
 
 Simple ruby script to parse log file in format `<url_address> <ip_address>` and return count of total or unique visits.
 
