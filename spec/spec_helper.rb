@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
+require 'parser'
 require 'logs_parser'
 require 'pry'
+require 'securerandom'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

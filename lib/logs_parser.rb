@@ -1,24 +1,9 @@
 # frozen_string_literal: true
 
 require 'pry'
+require_relative 'logs_parser/reader'
 
 module LogsParser
-  class Reader
-    def initialize(file_path)
-      @file_path = file_path
-    end
-
-    def call
-      lines = []
-
-      File.foreach(@file_path) do |line|
-        lines << line.strip
-      end
-
-      lines
-    end
-  end
-
   class Storer
     def initialize(line_splitter: nil)
       @storage = Hash.new { [] }
@@ -86,11 +71,11 @@ module LogsParser
 
   class Worker
     def call(input_path)
-      Reader.new(input_path).call
-            .then { |lines| Storer.new(line_splitter: LineSplitter.new).call(lines) }
-            .then { |visits| Counter.new.call(visits) }
-            .then { |counted_visits| Sorter.new.call(counted_visits) }
-            .then { |sorted_visits| Printer.new.print_total(sorted_visits) }
+      LogsParser::Reader.new(input_path).call
+                        .then { |lines| Storer.new(line_splitter: LineSplitter.new).call(lines) }
+                        .then { |visits| Counter.new.call(visits) }
+                        .then { |counted_visits| Sorter.new.call(counted_visits) }
+                        .then { |sorted_visits| Printer.new.print_total(sorted_visits) }
     end
   end
 end
