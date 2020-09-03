@@ -85,3 +85,14 @@ make run_test
 `make` command will build a Docker image, start the container, and run `rspec` inside.
 It will print results and test coverage.
 The project uses unit and integration tests that offer 100% test coverage (measured by SimpleCov).
+
+
+## CI
+
+This project is using `CircleCI` to perform several checks on the committed code. We run:
+* `bundle audit` - to find gem's vulnerabilities
+* `rubocop` - to find code style violations
+* `trivy` - to scan the base image for vulnerabilities
+
+Test results are sent to `CodeClimate` for further analysis of maintainability and test coverage.
+
