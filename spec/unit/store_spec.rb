@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe LogsParser::Storer do
+RSpec.describe LogsParser::Store do
   subject(:store) { described_class.new.call(lines) }
 
   let(:lines) do

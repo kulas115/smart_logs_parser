@@ -3,11 +3,11 @@
 # rubocop:disable Metrics/ParameterLists
 module LogsParser
   class Worker
-    def initialize(input_path:, reader: nil, storer: nil, line_splitter: nil,
+    def initialize(input_path:, reader: nil, store: nil, line_splitter: nil,
                    counter: nil, sorter: nil, printer: nil)
       @input_path = input_path
       @reader = reader || Reader
-      @storer = storer || Storer
+      @store = store || Store
       @line_splitter = line_splitter || LineSplitter
       @counter = counter || Counter::Total
       @sorter = sorter || Sorter
@@ -24,7 +24,7 @@ module LogsParser
 
     private
 
-    attr_reader :input_path, :reader, :storer, :line_splitter, :counter,
+    attr_reader :input_path, :reader, :store, :line_splitter, :counter,
                 :sorter, :printer
 
     def read_file
@@ -32,7 +32,7 @@ module LogsParser
     end
 
     def store_file_content(lines)
-      storer.new(line_splitter: line_splitter.new).call(lines)
+      store.new(line_splitter: line_splitter.new).call(lines)
     end
 
     def count_visits(visits)

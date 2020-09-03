@@ -6,7 +6,7 @@ RSpec.describe LogsParser::Worker do
     described_class.new(
       input_path: input_path,
       reader: reader,
-      storer: storer,
+      store: store,
       line_splitter: line_splitter,
       counter: counter,
       sorter: sorter,
@@ -16,7 +16,7 @@ RSpec.describe LogsParser::Worker do
 
   let(:input_path)    { 'fake_path' }
   let(:reader)        { LogsParser::Reader }
-  let(:storer)        { LogsParser::Storer }
+  let(:store)         { LogsParser::Store }
   let(:storer_double) { instance_double('LogsParser::Storer', call: visits) }
   let(:line_splitter) { LogsParser::LineSplitter }
   let(:counter)       { LogsParser::Counter::Total }
@@ -28,7 +28,7 @@ RSpec.describe LogsParser::Worker do
   before do
     allow(reader).to receive(:call).and_return(lines)
     allow(line_splitter).to receive(:new)
-    allow(storer).to receive(:new).and_return(storer_double)
+    allow(store).to receive(:new).and_return(storer_double)
     allow(counter).to receive(:call).and_return(visits)
     allow(sorter).to receive(:call).and_return(visits)
     allow(printer).to receive(:call)
@@ -40,7 +40,7 @@ RSpec.describe LogsParser::Worker do
 
       expect(reader).to have_received(:call).with(input_path).once
       expect(line_splitter).to have_received(:new)
-      expect(storer).to have_received(:new)
+      expect(store).to have_received(:new)
       expect(storer_double).to have_received(:call).with(lines).once
       expect(counter).to have_received(:call).with(visits).once
       expect(sorter).to have_received(:call).with(visits).once
