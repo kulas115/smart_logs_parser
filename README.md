@@ -1,44 +1,87 @@
 # LogsParser
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/logs_parser`. To experiment with that code, run `bin/console` for an interactive prompt.
+Simple ruby script to parse log file in format `<url_address> <ip_address>` and return count of total or unique visits.
 
-TODO: Delete this and the text above, and describe your gem
+## Prerequisites
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'logs_parser'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install logs_parser
+* Docker (optional)
 
 ## Usage
 
-TODO: Write usage instructions here
+This project is using `Docker` and `Makefile` to enable swift and reliable usage however `parse` can also be run directly.
+
+In the root of the repository is an example file with logs - `webserver.log` that should be provided as an argument to `parser` script.
+
+To parse the file you got two options:
+* run directly in the root of the repository:
+```bash
+./bin/parse webserver.log
+```
+* run script in `Docker` container:
+```bash
+make run_parser args='./webserver.log'
+```
+
+Example output:
+```
+/about/2 90 visits
+/contact 89 visits
+/index 82 visits
+/about 81 visits
+/help_page/1 80 visits
+/home 78 visits
+```
+
+The parser returns the total count of visits by default but that can be changed by passing `-o unique` while running it. This yields:
+* while running directly:
+```bash
+./bin/parse webserver.log -o unique
+```
+* while running via `make` with `Docker`:
+```bash
+make run_parser args='./webserver.log -o unique'
+```
+
+Example output:
+```
+/help_page/1 23 unique views
+/contact 23 unique views
+/home 23 unique views
+/index 23 unique views
+/about/2 22 unique views
+/about 21 unique views
+```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+The project is using some fundamental gems that provide ease of development:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+    bundler-audit
+    pry
+    rspec
+    rubocop
+    rubocop-rspec
+    rubocop-performance
+    simplecov
 
-## Contributing
+To enter container with shell run:
+```bash
+make run_shell
+```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/logs_parser. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/logs_parser/blob/master/CODE_OF_CONDUCT.md).
+It will build the project's Docker image and run the container with `sh` shell inside.
 
+## Tests
 
-## License
+To run the test simply use the command:
+```bash
+rspec
+```
+or
+```bash
+make run_test
+```
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the LogsParser project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/logs_parser/blob/master/CODE_OF_CONDUCT.md).
+`make` command will build a Docker image, start the container, and run `rspec` inside.
+It will print results and test coverage.
+The project uses unit and integration tests that offer 100% test coverage (measured by SimpleCov).
