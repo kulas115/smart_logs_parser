@@ -2,9 +2,37 @@
 # frozen_string_literal: true
 
 require_relative '../lib/parser.rb'
+require 'optparse'
+
+arguments = {}
+
+options = OptionParser.new do |opts|
+  opts.banner = "Usage: logs_parser <path_to_file> [options] \n"\
+                "(by default groups by total numer of visits in descending order) \n\n"
+
+  opts.separator ''
+  opts.separator 'Options:'
+
+  opts.on('-o OPTION', '--option=OPTION', "Available options: 'total' (default) or 'unique'") do |option|
+    arguments[:schema] = option.downcase.to_sym
+  end
+
+  opts.on('-h', '--help', 'Prints this help') do
+    puts opts
+    exit
+  end
+end
 
 if ARGV.empty?
   puts 'Please include path to the logs file'
 else
-  Parser.new(file_path: ARGV[0]).call
+  begin
+    options.parse!
+    Parser.new(file_path: ARGV[0], schema: arguments[:schema]).call
+  rescue Errno::ENOENT => _e
+    puts "Provided file '#{ARGV[0]}' doesn't exist."
+  rescue OptionParser::InvalidOption
+    puts "Warning: You've provided some invalid option.\n" \
+         'Use -h switch to see available options'
+  end
 end
