@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'logs_parser'
 
 class Parser
