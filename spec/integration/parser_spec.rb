@@ -47,7 +47,7 @@ RSpec.describe Parser do
         TEXT
       end
 
-      it 'it prints total visits to the srdout' do
+      it 'prints total visits to the srdout' do
         expect { parse }.to output(results).to_stdout
       end
     end
@@ -65,7 +65,7 @@ RSpec.describe Parser do
         TEXT
       end
 
-      it 'it prints unique visits to the srdout' do
+      it 'prints unique visits to the srdout' do
         expect { parse }.to output(results).to_stdout
       end
     end
@@ -83,7 +83,7 @@ RSpec.describe Parser do
         TEXT
       end
 
-      it 'it prints total visits to the srdout' do
+      it 'prints total visits to the srdout' do
         expect { parse }.to output(results).to_stdout
       end
     end
