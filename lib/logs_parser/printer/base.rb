@@ -2,7 +2,7 @@
 
 module LogsParser
   module Printer
-    class Base  < LogsParserService
+    class Base < LogsParserService
       def call(visits_array)
         visits_array.each(&method(:print))
       end
