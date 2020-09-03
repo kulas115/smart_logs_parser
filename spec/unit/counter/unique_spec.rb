@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-
 RSpec.describe LogsParser::Counter::Unique do
   let(:visits) do
     {

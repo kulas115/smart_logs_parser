@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-
 RSpec.describe LogsParser::LineSplitter do
   subject(:splitter) { described_class.call(line) }
 

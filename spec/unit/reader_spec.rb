@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-
 RSpec.describe LogsParser::Reader do
   subject(:reader) { described_class.call(file_path) }
 

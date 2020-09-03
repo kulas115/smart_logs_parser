@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
 RSpec.describe Parser do
   let(:sample_log_path) { './sample_webserver.log' }
 

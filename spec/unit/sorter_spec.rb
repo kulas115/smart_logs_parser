@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-
 RSpec.describe LogsParser::Sorter do
   subject(:sort) { described_class.call(visits) }
 

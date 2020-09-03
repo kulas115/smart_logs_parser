@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-
 RSpec.describe LogsParser::Storer do
   subject(:store) { described_class.new.call(lines) }
 
